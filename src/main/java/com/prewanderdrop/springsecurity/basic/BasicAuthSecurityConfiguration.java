@@ -13,8 +13,8 @@ import org.springframework.security.web.header.writers.frameoptions.XFrameOption
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
-@Configuration
-@EnableWebSecurity
+//@Configuration
+//@EnableWebSecurity
 public class BasicAuthSecurityConfiguration {
 
     @Bean
