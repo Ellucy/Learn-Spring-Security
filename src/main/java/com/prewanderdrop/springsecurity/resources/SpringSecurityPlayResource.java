@@ -8,6 +8,7 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.jdbc.JdbcDaoImpl;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.security.web.csrf.CsrfToken;
@@ -53,20 +54,29 @@ public class SpringSecurityPlayResource {
     public UserDetailsService userDetailsService(DataSource dataSource) {
 
         var user = User.withUsername("eleri")
-        .password("{noop}eleri")
+//        .password("{noop}eleri")
+                .password("eleri")
+                .passwordEncoder(str -> passwordEncoder().encode(str))
                 .roles(String.valueOf(Role.USER))
                 .build();
 
         var admin = User.withUsername("admin")
-                .password("{noop}eleri")
+//                .password("{noop}eleri")
+                .password("eleri")
+                .passwordEncoder(str -> passwordEncoder().encode(str))
                 .roles(String.valueOf(Role.ADMIN))
                 .build();
 
-       var jdbcUserDetailsManager = new JdbcUserDetailsManager(dataSource);
-       jdbcUserDetailsManager.createUser(user);
-       jdbcUserDetailsManager.createUser(admin);
+        var jdbcUserDetailsManager = new JdbcUserDetailsManager(dataSource);
+        jdbcUserDetailsManager.createUser(user);
+        jdbcUserDetailsManager.createUser(admin);
 
         return jdbcUserDetailsManager;
+    }
+
+    @Bean
+    public BCryptPasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 
 }
